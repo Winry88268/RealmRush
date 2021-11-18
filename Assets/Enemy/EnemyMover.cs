@@ -9,7 +9,26 @@ public class EnemyMover : MonoBehaviour
     
     void Start()
     {
+        FindPath();
+        ReturnToStart();
         StartCoroutine(FollowPath());
+    }
+
+    void FindPath()
+    {
+        this.path.Clear();
+
+        GameObject parent = GameObject.FindGameObjectWithTag("Path");
+
+        foreach(Transform child in parent.transform)
+        {
+            this.path.Add(child.GetComponent<Waypoint>());
+        }
+    }
+
+    void ReturnToStart()
+    {
+        this.transform.position = path[0].transform.position;
     }
 
     IEnumerator FollowPath()
@@ -27,8 +46,8 @@ public class EnemyMover : MonoBehaviour
                 travelPercent += Time.deltaTime * this.speed;
                 this.transform.position = Vector3.Lerp(startPos, endPos, travelPercent);
                 yield return new WaitForEndOfFrame();
-            }
-            
-        }  
+            }   
+        } 
+        Destroy(this.gameObject); 
     }
 }
