@@ -73,8 +73,10 @@ public class CoordinateLabeler : MonoBehaviour
 
     void DisplayCoordinates()
     {
-        this.coordinates.x = Mathf.RoundToInt(this.transform.position.x / UnityEditor.EditorSnapSettings.move.x);
-        this.coordinates.y = Mathf.RoundToInt(this.transform.position.z / UnityEditor.EditorSnapSettings.move.z);
+        if(this.gridManager == null) { return; }
+
+        this.coordinates.x = Mathf.RoundToInt(this.transform.position.x / this.gridManager.UnityGridSize);
+        this.coordinates.y = Mathf.RoundToInt(this.transform.position.z / this.gridManager.UnityGridSize);
 
         this.label.text = this.coordinates.x + "," + this.coordinates.y;
     }
