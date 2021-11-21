@@ -30,8 +30,14 @@ public class Pathfinder : MonoBehaviour
         this.startNode = this.gridManager.Grid[startCoords];
         this.endNode = this.gridManager.Grid[endCoords];
 
+        GetNewPath();
+    }
+
+    public List<Node> GetNewPath()
+    {
+        this.gridManager.ResetNodes();
         BreadthFirstSearch();
-        BuildPath();
+        return BuildPath();
     }
 
     void ExploreNeighbors()
@@ -61,6 +67,9 @@ public class Pathfinder : MonoBehaviour
 
     void BreadthFirstSearch()
     {
+        this.frontier.Clear();
+        this.reached.Clear();
+
         bool isRunning = true;
 
         this.frontier.Enqueue(startNode);
@@ -96,5 +105,25 @@ public class Pathfinder : MonoBehaviour
         path.Reverse();
 
         return path;
+    }
+
+    public bool WillBlockPath(Vector2Int coordinates)
+    {
+        if(this.grid.ContainsKey(coordinates))
+        {
+            bool previousState = this.grid[coordinates].isWalkable;
+
+            this.grid[coordinates].isWalkable = false;
+            List<Node> newPath = GetNewPath();
+            this.grid[coordinates].isWalkable = previousState;
+
+            if(newPath.Count <= 1)
+            {
+                GetNewPath();
+                return true;
+            }
+        }
+
+        return false;
     }
 }
