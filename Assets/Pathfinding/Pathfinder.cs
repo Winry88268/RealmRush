@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class Pathfinder : MonoBehaviour
 {
-    Node startNode, endNode, currSearchNode;
+    
     [SerializeField] Vector2Int startCoords;
+    public Vector2Int StartCoords { get { return startCoords; } }
+
     [SerializeField] Vector2Int endCoords;
+    public Vector2Int EndCoords { get { return endCoords; } }
+
     Vector2Int[] directions = { Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.left };
+    Node startNode, endNode, currSearchNode;
 
     Queue<Node> frontier = new Queue<Node>();
     Dictionary<Vector2Int, Node> reached = new Dictionary<Vector2Int, Node>(); 
@@ -22,14 +27,13 @@ public class Pathfinder : MonoBehaviour
         if(this.gridManager != null)
         {
             this.grid = this.gridManager.Grid;
+            this.startNode = this.grid[startCoords];
+            this.endNode = this.grid[endCoords];
         }
     }    
 
     void Start() 
     {
-        this.startNode = this.gridManager.Grid[startCoords];
-        this.endNode = this.gridManager.Grid[endCoords];
-
         GetNewPath();
     }
 
@@ -67,6 +71,9 @@ public class Pathfinder : MonoBehaviour
 
     void BreadthFirstSearch()
     {
+        this.startNode.isWalkable = true;
+        this.endNode.isWalkable = true;
+
         this.frontier.Clear();
         this.reached.Clear();
 
